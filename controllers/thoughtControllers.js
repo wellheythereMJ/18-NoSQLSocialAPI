@@ -44,4 +44,4 @@ module.exports = {
 // follow update and delete functions in userControllers.js
 
 // follow routes in miniProj, but use readme api URLS
-check courseRoutes
+// check courseRoutes in miniProj for routes
