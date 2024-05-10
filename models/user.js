@@ -10,16 +10,16 @@ const userSchema = new Schema({
     type: String,
     unique: true,
     required: true,
-    match: /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
+    match: [/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/, "invalid email address"],
   }, 
-  thoughts: {
+  thoughts: [{
     type: Schema.Types.ObjectId,
     ref: 'Thought',
-  },
-  friends: {
+  }],
+  friends: [{
     type: Schema.Types.ObjectId,
     ref: 'User',
-  }
+  }]
 },
 {
   toJSON: {
@@ -28,7 +28,9 @@ const userSchema = new Schema({
   id: false,
 }
 );
-
+userSchema.virtual('friendCount').get(function() {
+  return this.friends.length;
+});
 const User = model('User', userSchema);
 
 module.exports = User;
