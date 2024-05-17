@@ -36,12 +36,56 @@ module.exports = {
     }
   },
 
+  async updateThought(req, res){
+    try {
+      const thought = await Thought.findByIdAndUpdate(req.params.id, {$set:req.body}, {new: true})
+      if (!thought) {
+        return res.status(404).json({message: "No thought found with this id!"})
+      }
+      res.status(200).json(thought)
+    } catch (err) {
+      console.log(err)
+      res.status(500).json(err)
+    }
+  },
+  async deleteThought(req, res){
+    try {
+      const thought = await Thought.findByIdAndDelete(req.params.id)
+      if (!thought) {
+        return res.status(404).json({message: "No thought found with this id!"})
+      }
+      res.status(200).json(thought)
+    } catch (err) {
+      console.log(err)
+      res.status(500).json(err)
+    }
+  },
+  async addReaction(req, res){
+    try {
+      const thought = await Thought.findByIdAndUpdate(req.params.thoughtId, {
+        $addToSet: {reactions: req.body},
+      }, {new: true, runValidators: true})
+      if (!thought) {
+        return res.status(404).json({message: "No thought found with this id!"})
+      }   
+      res.status(200).json(thought)
+    } catch (err) {
+      console.log(err)
+      res.status(500).json(err)
+    }
+  },
+  async removeReaction(req, res){
+    try {
+      const thought = await Thought.findByIdAndUpdate(req.params.thoughtId, {
+        $pull: {reactions: {reactionId: req.params.reactionId}},
+      }, {new: true, runValidators: true})
+      if (!thought) {
+        return res.status(404).json({message: "No thought found with this id!"})
+      }   
+      res.status(200).json(thought)
+    } catch (err) {
+      console.log(err)
+      res.status(500).json(err)
+    }
+  }
 }
-
-// TODO:
-// student is thought
-// // assignment is reaction
-// follow update and delete functions in userControllers.js
-
-// follow routes in miniProj, but use readme api URLS
-// check courseRoutes in miniProj for routes
